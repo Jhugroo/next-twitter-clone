@@ -12,8 +12,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <Head>
-        <title>twitter clone</title>
-        <meta name="description" content="zdurighdirg" />
+        <title>twitter lokal</title>
+        <meta name="description" content="payen rs40" />
       </Head>
       <div className="container mx-auto flex items-start sm:pr-4">
 
