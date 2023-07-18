@@ -24,7 +24,7 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
             <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Tweets: {profile.tweetsCount}</li>
             <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Liked posts: {profile.likesCount}</li>
             <li className="flex gap-4 hover:animate-pulse">
-                <Link href={`/`} className="p-5 bg-red-200 hover:anime-">
+                <Link href={`/`} className="p-5 bg-red-200 rounded-xl">
                     Back
                 </Link>
             </li>
