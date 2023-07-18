@@ -30,7 +30,7 @@ export const profileRouter = createTRPCRouter({
       followersCount: profile._count.followers,
       followsCount: profile._count.follows,
       tweetsCount: profile._count.tweets,
-      likesCount: profile._count.likes,
+      likesCount: profile._count.likes
     }
   })
 })
