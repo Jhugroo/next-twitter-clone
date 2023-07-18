@@ -30,7 +30,7 @@ export function InfiniteTweetsList({ tweets, isError, isLoading, fetchNewTweets,
 
     if (tweets == null || tweets.length === 0) {
         return <h2 className="my-4 text-center text-2x; text-gray-500">No tweets</h2>;
-    };
+    }
 
     return <ul>
         <InfiniteScroll
@@ -51,7 +51,7 @@ const datetimeFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: "short
 function TweetCard({ id, user, content, createdAt, likeCount, likedByMe }: Tweet) {
     const trpcUtils = api.useContext();
     const toggleLike = api.tweet.toggleLike.useMutation({
-        onSuccess: async ({ addedLike }) => {
+        onSuccess: ({ addedLike }) => {
             const updateData: Parameters<typeof trpcUtils.tweet.infiniteFeed.setInfiniteData>[1]
                 = (oldData) => {
                     if (oldData == null) return

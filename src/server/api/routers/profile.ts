@@ -1,10 +1,6 @@
-import { Prisma } from "@prisma/client";
-import { inferAsyncReturnType } from "@trpc/server";
 import { z } from "zod";
 import {
-  createTRPCContext,
   createTRPCRouter,
-  protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
 
@@ -24,9 +20,6 @@ export const profileRouter = createTRPCRouter({
       },
     });
     if (profile == null) return
-    return {
-      name: profile.name,
-      image: profile.image,
-    }
+    return;
   })
 })

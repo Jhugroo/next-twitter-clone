@@ -6,13 +6,13 @@ import ErrorPage from "next/error"
 const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> = ({ id }) => {
     const { data: profile } = api.profile.getById.useQuery({ id })
 
-    if (profile == null || profile.name == null) return <ErrorPage statusCode={404} />
+    // if (profile == null || profile.name == null) return <ErrorPage statusCode={404} />
 
     return (
         <>
             <Head>
-                <title>
-                    {`${profile.name}`}
+                <title>profile WORK IN PROGRESS
+                    {/* {`${profile.name}`} */}
                 </title>
             </Head>
         </>);

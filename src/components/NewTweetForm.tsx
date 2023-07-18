@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { FormEvent, useCallback, useLayoutEffect, useRef, useState } from "react";
 import { api } from "~/utils/api";
 
-function updateTextAreaSize(textArea?: HTMLTextAreaElement) {
+function updateTextAreaSize(textArea?: HTMLTextAreaElement | null) {
     if (textArea == null) return
     textArea.style.height = "0"
     textArea.style.height = `${textArea.scrollHeight}px`
@@ -18,7 +18,7 @@ export function NewTweetForm() {
 function Form() {
     const session = useSession();
     const [inputValue, setInputValue] = useState("");
-    const textAreaRef = useRef<HTMLTextAreaElement| null>(null)
+    const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
     const inputRef = useCallback((textArea: HTMLTextAreaElement) => {
         updateTextAreaSize(textArea);
         textAreaRef.current = textArea;
@@ -27,7 +27,7 @@ function Form() {
     const trpcUtils = api.useContext();
 
     useLayoutEffect(() => {
-        updateTextAreaSize(textAreaRef.current);
+        updateTextAreaSize(textAreaRef?.current);
 
     }, [inputValue]);
 
