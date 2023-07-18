@@ -3,19 +3,32 @@ import Head from "next/head";
 import { ssgHelper } from "~/server/api/ssgHelper";
 import { api } from "~/utils/api";
 import ErrorPage from "next/error"
+import { ProfileImage } from "~/components/ProfileImage";
+import Link from "next/link";
+import { IconHoverEffect } from "~/components/IconHoverEffect";
 const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> = ({ id }) => {
     const { data: profile } = api.profile.getById.useQuery({ id })
 
-    // if (profile == null || profile.name == null) return <ErrorPage statusCode={404} />
-
+    if (profile == null || profile.name == null) return <ErrorPage statusCode={404} />
     return (
         <>
             <Head>
                 <title>
-                    {/* {`${profile.name}`} */}
+                    {`${profile.name}`}
                 </title>
             </Head>
-            <h1 className="mb-2 px-4 text-lg font-bold text-center">WORK IN PROGRESS penkor fini</h1>
+            <li className="flex gap-4 border px-4 py-4"> <ProfileImage src={profile.image} className="w-24 h-24" />   <h1 className="mb-2 px-4 text-lg font-bold text-center hover:animate-pulse">{profile.name}</h1></li>
+
+            <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Followers: {profile.followersCount}</li>
+            <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Follows: {profile.followsCount}</li>
+            <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Tweets: {profile.tweetsCount}</li>
+            <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Liked posts: {profile.likesCount}</li>
+            <li className="flex gap-4 hover:animate-pulse">
+                <Link href={`/`} className="p-5 bg-red-200">
+                    Back
+                </Link>
+            </li>
+
         </>);
 }
 
