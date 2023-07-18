@@ -11,10 +11,11 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
     return (
         <>
             <Head>
-                <title>profile WORK IN PROGRESS
+                <title>
                     {/* {`${profile.name}`} */}
                 </title>
             </Head>
+            <h1 className="mb-2 px-4 text-lg font-bold text-center">WORK IN PROGRESS penkor fini</h1>
         </>);
 }
 
