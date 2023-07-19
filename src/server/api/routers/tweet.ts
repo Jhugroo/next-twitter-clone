@@ -65,18 +65,18 @@ export const tweetRouter = createTRPCRouter({
         return { addedLike: false }
       }
     }),
-  updateTweet: protectedProcedure
-    .input(z.object({ name: z.string(), id: z.string() }))
-    .mutation(async ({ input: { name, id }, ctx }) => {
-      const updateUser = await ctx.prisma.user.update({
+    updateTweet: protectedProcedure
+    .input(z.object({ content: z.string(), id: z.string() }))
+    .mutation(async ({ input: { content, id }, ctx }) => {
+      const updateTweet = await ctx.prisma.tweet.update({
         where: {
           id: id,
         },
         data: {
-          name: name,
+          content: content,
         },
       })
-      return { user: updateUser }
+      return { tweet: updateTweet }
     }),
 });
 

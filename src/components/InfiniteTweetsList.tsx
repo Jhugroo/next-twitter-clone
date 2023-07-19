@@ -85,7 +85,7 @@ function TweetCard({ id, user, content, createdAt, likeCount, likedByMe, hidePro
     }
     if (hideProfile == true) {
         return <li className="flex gap-4 border px-4 py-4">
-            <div className='flex flex-grow flex-col'>
+            <div className='flex flex-grow flex-col'>{id}
                 <p className="whitespace-pre-wrap">{content} </p>
             </div>
         </li>

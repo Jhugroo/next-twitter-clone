@@ -13,13 +13,22 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
     const { data: profile } = apiProfile.getById.useQuery({ id })
     const tweets = api.tweet.infiniteFeed.useInfiniteQuery({ currentId: id }, { getNextPageParam: (lastPage) => lastPage.nextCursor })
     const updateUser = apiProfile.updateUser.useMutation();
+    const updateTweet = api.tweet.updateTweet.useMutation();
+    const [inputValueTweet, setInputValueTweet] = useState("");
+    const [inputValueId, setInputValueId] = useState("");
     const [inputValue, setInputValue] = useState("");
+
+
     if (profile == null || profile.name == null) return <ErrorPage statusCode={404} />
     const [name, setName] = useState(profile.name);
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
         updateUser.mutate({ name: inputValue, id: id });
         setName(inputValue);
+    }
+    function handleSubmitTweet(e: FormEvent) {
+        e.preventDefault();
+        updateTweet.mutate({ content: inputValueTweet, id: inputValueId });
     }
     return (
         <>
@@ -39,6 +48,13 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
             <li className="flex gap-4 hover:animate-pulse">
                 <form onSubmit={handleSubmit}>
                     <input value={inputValue} className="border" onChange={(e) => setInputValue(e.target.value)} placeholder="username" />
+                    <Button className="self-end">Change Username</Button>
+                </form>
+            </li>
+            <li className="flex gap-4 hover:animate-pulse">
+                <form onSubmit={handleSubmitTweet}>
+                    <input value={inputValueId} className="border" onChange={(e) => setInputValueId(e.target.value)} placeholder="id" />
+                    <input value={inputValueTweet} className="border" onChange={(e) => setInputValueTweet(e.target.value)} placeholder="tweet" />
                     <Button className="self-end">Change Username</Button>
                 </form>
             </li>
