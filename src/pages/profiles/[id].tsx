@@ -35,9 +35,7 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
             <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Liked posts: {profile.likesCount}</li>
             <li className="flex gap-4 hover:animate-pulse">
                 <form onSubmit={handleSubmit} className="">
-
                     <input value={inputValue} className="border" onChange={(e) => setInputValue(e.target.value)} placeholder="username" />
-
                     <Button className="self-end">Change Username</Button>
                 </form>
             </li>
