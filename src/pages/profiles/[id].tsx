@@ -13,19 +13,21 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
     const updateUser = apiProfile.updateUser.useMutation();
     const [inputValue, setInputValue] = useState("");
     if (profile == null || profile.name == null) return <ErrorPage statusCode={404} />
+    const [name, setName] = useState(profile.name);
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
-        updateUser.mutate({ name: inputValue, id: profile.id });
+        updateUser.mutate({ name: inputValue, id: id });
+        setName(inputValue);
     }
     return (
         <>
             <Head>
                 <title>
-                    {`${profile.name}`}
+                    {`${name}`}
                 </title>
             </Head>
             <li className="flex gap-4 border px-4 py-4"> <ProfileImage src={profile.image} className="w-24 h-24" />
-                <h1 className="mb-2 px-4 text-lg font-bold text-center hover:animate-pulse">{profile.name}</h1>
+                <h1 className="mb-2 px-4 text-lg font-bold text-center hover:animate-pulse">{name}</h1>
             </li>
             <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Followers: {profile.followersCount}</li>
             <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Follows: {profile.followsCount}</li>
@@ -40,7 +42,7 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
                 </form>
             </li>
             <li className="flex gap-4 hover:animate-pulse">
-                <Link href={`/`} className="p-5 bg-red-200 rounded-xl">
+                <Link href={`/ `} className="p-5 bg-red-200 rounded-xl">
                     Back
                 </Link>
             </li>
