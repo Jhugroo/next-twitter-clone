@@ -7,9 +7,11 @@ import { ProfileImage } from "~/components/ProfileImage";
 import Link from "next/link";
 import { Button } from "~/components/Button";
 import { useState, FormEvent } from "react";
+import { InfiniteTweetsList } from "~/components/InfiniteTweetsList";
 const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> = ({ id }) => {
     const apiProfile = api.profile;
     const { data: profile } = apiProfile.getById.useQuery({ id })
+    const tweets = api.tweet.infiniteFeed.useInfiniteQuery({ currentId: id }, { getNextPageParam: (lastPage) => lastPage.nextCursor })
     const updateUser = apiProfile.updateUser.useMutation();
     const [inputValue, setInputValue] = useState("");
     if (profile == null || profile.name == null) return <ErrorPage statusCode={404} />
@@ -26,7 +28,8 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
                     {`${name}`}
                 </title>
             </Head>
-            <li className="flex gap-4 border px-4 py-4"> <ProfileImage src={profile.image} className="w-24 h-24" />
+            <li className="flex gap-4 border px-4 py-4">
+                <ProfileImage src={profile.image} className="w-24 h-24" />
                 <h1 className="mb-2 px-4 text-lg font-bold text-center hover:animate-pulse">{name}</h1>
             </li>
             <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Followers: {profile.followersCount}</li>
@@ -34,17 +37,26 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
             <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Tweets: {profile.tweetsCount}</li>
             <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Liked posts: {profile.likesCount}</li>
             <li className="flex gap-4 hover:animate-pulse">
-                <form onSubmit={handleSubmit} className="">
+                <form onSubmit={handleSubmit}>
                     <input value={inputValue} className="border" onChange={(e) => setInputValue(e.target.value)} placeholder="username" />
                     <Button className="self-end">Change Username</Button>
                 </form>
             </li>
-            <li className="flex gap-4 hover:animate-pulse">
-                <Link href={`/ `} className="p-5 bg-red-200 rounded-xl">
-                    Back
+            <li className="flex gap-4">    Your tweets
+            </li>
+            <li className="flex gap-4">
+                <InfiniteTweetsList
+                    tweets={tweets.data?.pages.flatMap((page) => page.tweets)} isError={tweets.isError}
+                    isLoading={tweets.isLoading}
+                    hasMore={tweets.hasNextPage}
+                    hideProfile={true}
+                    fetchNewTweets={tweets.fetchNextPage}
+                />
+                <Link href={`/ `}>
+                    <button className="bg-red-300 rounded-full px-4 py-2 font-bold"> Back
+                    </button>
                 </Link>
             </li>
-
         </>
     );
 }

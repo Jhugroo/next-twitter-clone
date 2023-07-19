@@ -12,7 +12,8 @@ type Tweet = {
     createdAt: Date,
     likeCount: number,
     likedByMe: boolean,
-    user: { id: string, image: string | null, name: string | null }
+    user: { id: string, image: string | null, name: string | null },
+    hideProfile?: boolean
 };
 type InfiniteTweetListProps = {
     isLoading: boolean,
@@ -20,9 +21,10 @@ type InfiniteTweetListProps = {
     hasMore: boolean | undefined,
     fetchNewTweets: () => Promise<unknown>
     tweets?: Tweet[]
+    hideProfile?: boolean
 }
 
-export function InfiniteTweetsList({ tweets, isError, isLoading, fetchNewTweets, hasMore = false }: InfiniteTweetListProps) {
+export function InfiniteTweetsList({ tweets, isError, isLoading, fetchNewTweets, hasMore = false, hideProfile = false }: InfiniteTweetListProps) {
 
     if (isLoading) return <LoadingSpinner />;
     if (isError) return <h1>Error...</h1>;
@@ -40,7 +42,7 @@ export function InfiniteTweetsList({ tweets, isError, isLoading, fetchNewTweets,
             loader={<LoadingSpinner />}>
             {
                 tweets.map((tweet) => {
-                    return <TweetCard key={tweet.id} {...tweet} />
+                    return <TweetCard hideProfile={hideProfile} key={tweet.id} {...tweet} />
                 })}
         </InfiniteScroll>
     </ul>
@@ -48,7 +50,7 @@ export function InfiniteTweetsList({ tweets, isError, isLoading, fetchNewTweets,
 
 const datetimeFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: "short" });
 
-function TweetCard({ id, user, content, createdAt, likeCount, likedByMe }: Tweet) {
+function TweetCard({ id, user, content, createdAt, likeCount, likedByMe, hideProfile = false }: Tweet) {
     const trpcUtils = api.useContext();
     const toggleLike = api.tweet.toggleLike.useMutation({
         onSuccess: ({ addedLike }) => {
@@ -80,6 +82,13 @@ function TweetCard({ id, user, content, createdAt, likeCount, likedByMe }: Tweet
     });
     function handleToggleLike() {
         toggleLike.mutate({ id });
+    }
+    if (hideProfile == true) {
+        return <li className="flex gap-4 border px-4 py-4">
+            <div className='flex flex-grow flex-col'>
+                <p className="whitespace-pre-wrap">{content} </p>
+            </div>
+        </li>
     }
     return <li className="flex gap-4 border px-4 py-4">
         <Link href={`/profiles/${user.id}`} >
