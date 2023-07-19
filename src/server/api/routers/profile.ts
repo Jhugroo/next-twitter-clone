@@ -35,6 +35,7 @@ export const profileRouter = createTRPCRouter({
       likesCount: profile._count.likes
     }
   }),
+
   updateUser: protectedProcedure
     .input(z.object({ name: z.string(), id: z.string() }))
     .mutation(async ({ input: { name, id }, ctx }) => {
@@ -46,6 +47,6 @@ export const profileRouter = createTRPCRouter({
           name: name,
         },
       })
-      return { addedLike: updateUser }
+      return { user: updateUser }
     }),
 })
