@@ -15,6 +15,7 @@ export const profileRouter = createTRPCRouter({
     const profile = await ctx.prisma.user.findUnique({
       where: { id },
       select: {
+        id: true,
         name: true,
         image: true,
         _count: { select: { followers: true, follows: true, tweets: true, likes: true } },
@@ -25,6 +26,7 @@ export const profileRouter = createTRPCRouter({
     });
     if (profile == null) return
     return {
+      id: profile.id,
       name: profile.name,
       image: profile.image,
       followersCount: profile._count.followers,
@@ -32,5 +34,18 @@ export const profileRouter = createTRPCRouter({
       tweetsCount: profile._count.tweets,
       likesCount: profile._count.likes
     }
-  })
+  }),
+  updateUser: protectedProcedure
+    .input(z.object({ name: z.string(), id: z.string() }))
+    .mutation(async ({ input: { name, id }, ctx }) => {
+      const updateUser = await ctx.prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: {
+          name: name,
+        },
+      })
+      return { addedLike: updateUser }
+    }),
 })

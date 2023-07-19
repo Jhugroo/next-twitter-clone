@@ -5,10 +5,18 @@ import { api } from "~/utils/api";
 import ErrorPage from "next/error"
 import { ProfileImage } from "~/components/ProfileImage";
 import Link from "next/link";
+import { Button } from "~/components/Button";
+import { useState, FormEvent } from "react";
 const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> = ({ id }) => {
-    const { data: profile } = api.profile.getById.useQuery({ id })
-
+    const apiProfile = api.profile;
+    const { data: profile } = apiProfile.getById.useQuery({ id })
+    const updateUser = apiProfile.updateUser.useMutation();
+    const [inputValue, setInputValue] = useState("");
     if (profile == null || profile.name == null) return <ErrorPage statusCode={404} />
+    function handleSubmit(e: FormEvent) {
+        e.preventDefault();
+        updateUser.mutate({ name: inputValue, id: profile.id });
+    }
     return (
         <>
             <Head>
@@ -28,6 +36,12 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
                     Back
                 </Link>
             </li>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-2 border-2 px-4 py-2">
+
+                <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+
+                <Button className="self-end">Change Username</Button>
+            </form>
         </>
     );
 }
