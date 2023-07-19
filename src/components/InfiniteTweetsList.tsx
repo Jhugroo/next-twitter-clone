@@ -1,11 +1,13 @@
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { ProfileImage } from './ProfileImage';
 import Link from 'next/link';
+import { useForm } from "react-hook-form";
 import { useSession } from 'next-auth/react';
 import { VscHeartFilled, VscHeart } from "react-icons/vsc";
 import { IconHoverEffect } from './IconHoverEffect';
 import { api } from '~/utils/api';
 import { LoadingSpinner } from './LoadingSpinner';
+import { Button } from './Button';
 type Tweet = {
     id: string,
     content: string,
@@ -52,6 +54,8 @@ const datetimeFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: "short
 
 function TweetCard({ id, user, content, createdAt, likeCount, likedByMe, hideProfile = false }: Tweet) {
     const trpcUtils = api.useContext();
+    const updateTweet = api.tweet.updateTweet.useMutation();
+    const { register, handleSubmit } = useForm();
     const toggleLike = api.tweet.toggleLike.useMutation({
         onSuccess: ({ addedLike }) => {
             const updateData: Parameters<typeof trpcUtils.tweet.infiniteFeed.setInfiniteData>[1]
@@ -83,10 +87,19 @@ function TweetCard({ id, user, content, createdAt, likeCount, likedByMe, hidePro
     function handleToggleLike() {
         toggleLike.mutate({ id });
     }
+    function handleSubmitTweet(data: any) {
+        console.log(data);
+        updateTweet.mutate({ content: data.content, id: data.id });
+    }
     if (hideProfile == true) {
         return <li className="flex gap-4 border px-4 py-4">
-            <div className='flex flex-grow flex-col'>{id}
+            <div className='flex flex-grow flex-col'>
                 <p className="whitespace-pre-wrap">{content} </p>
+                <form onSubmit={handleSubmit(handleSubmitTweet)}>
+                    <input {...register("id")} className="border" placeholder="id" value={id} type="hidden" />
+                    <input {...register("content")} className="border" placeholder="tweet" />
+                    <Button className="self-end">Change Tweet</Button>
+                </form>
             </div>
         </li>
     }

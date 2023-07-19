@@ -65,7 +65,7 @@ export const tweetRouter = createTRPCRouter({
         return { addedLike: false }
       }
     }),
-    updateTweet: protectedProcedure
+  updateTweet: protectedProcedure
     .input(z.object({ content: z.string(), id: z.string() }))
     .mutation(async ({ input: { content, id }, ctx }) => {
       const updateTweet = await ctx.prisma.tweet.update({
@@ -77,6 +77,13 @@ export const tweetRouter = createTRPCRouter({
         },
       })
       return { tweet: updateTweet }
+    }),
+  // router to get likes by where tweet id 
+  // and from likes get user name
+  getLikeUsersFromTweet: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input: { id }, ctx }) => {
+      return { users: null }
     }),
 });
 

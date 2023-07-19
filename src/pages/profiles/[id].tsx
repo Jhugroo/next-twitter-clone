@@ -51,14 +51,8 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
                     <Button className="self-end">Change Username</Button>
                 </form>
             </li>
-            <li className="flex gap-4 hover:animate-pulse">
-                <form onSubmit={handleSubmitTweet}>
-                    <input value={inputValueId} className="border" onChange={(e) => setInputValueId(e.target.value)} placeholder="id" />
-                    <input value={inputValueTweet} className="border" onChange={(e) => setInputValueTweet(e.target.value)} placeholder="tweet" />
-                    <Button className="self-end">Change Username</Button>
-                </form>
-            </li>
-            <li className="flex gap-4">    Your tweets
+            <li className="flex gap-4">
+                Your tweets
             </li>
             <li className="flex gap-4">
                 <InfiniteTweetsList
