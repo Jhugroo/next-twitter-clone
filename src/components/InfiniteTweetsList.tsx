@@ -88,7 +88,6 @@ function TweetCard({ id, user, content, createdAt, likeCount, likedByMe, hidePro
         toggleLike.mutate({ id });
     }
     function handleSubmitTweet(data: any) {
-        console.log(data);
         updateTweet.mutate({ content: data.content, id: data.id });
     }
     if (hideProfile == true) {
