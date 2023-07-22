@@ -13,6 +13,8 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
     const { data: profile } = apiProfile.getById.useQuery({ id })
     const tweets = api.tweet.infiniteFeed.useInfiniteQuery({ currentId: id }, { getNextPageParam: (lastPage) => lastPage.nextCursor })
     const updateUser = apiProfile.updateUser.useMutation();
+    const toggleFollow = apiProfile.toggleFollow.useMutation();
+    const { data: followStatus } = apiProfile.followStatus.useQuery({ id });
     const updateTweet = api.tweet.updateTweet.useMutation();
     const [inputValueTweet, setInputValueTweet] = useState("");
     const [inputValueId, setInputValueId] = useState("");
@@ -40,14 +42,13 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
             <li className="flex gap-4 border px-4 py-4">
                 <ProfileImage src={profile.image} className="w-24 h-24" />
                 <h1 className="mb-2 px-4 text-lg font-bold text-center hover:animate-pulse">{name}</h1>
-
+                <Button onClick={() => toggleFollow.mutate({ userId: id })} className={` ${followStatus?.followObj?.classes} self-end`}>{followStatus?.followObj?.text}</Button>
             </li>
             <li className="flex gap-4 border px-4 py-4">
                 <form onSubmit={handleSubmit}>
                     <input value={inputValue} className="border" onChange={(e) => setInputValue(e.target.value)} placeholder="username" />
                     <Button className="self-end">Change Username</Button>
                 </form>
-
             </li>
             <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Followers: {profile.followersCount}</li>
             <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Follows: {profile.followsCount}</li>
