@@ -16,6 +16,7 @@ type Tweet = {
     likedByMe: boolean,
     user: { id: string, image: string | null, name: string | null },
     hideProfile?: boolean
+    isEditable?: boolean
 };
 type InfiniteTweetListProps = {
     isLoading: boolean,
@@ -24,9 +25,10 @@ type InfiniteTweetListProps = {
     fetchNewTweets: () => Promise<unknown>
     tweets?: Tweet[]
     hideProfile?: boolean
+    isEditable?: boolean
 }
 
-export function InfiniteTweetsList({ tweets, isError, isLoading, fetchNewTweets, hasMore = false, hideProfile = false }: InfiniteTweetListProps) {
+export function InfiniteTweetsList({ tweets, isError, isLoading, fetchNewTweets, hasMore = false, hideProfile = false, isEditable = false }: InfiniteTweetListProps) {
 
     if (isLoading) return <LoadingSpinner />;
     if (isError) return <h1>Error...</h1>;
@@ -44,7 +46,7 @@ export function InfiniteTweetsList({ tweets, isError, isLoading, fetchNewTweets,
             loader={<LoadingSpinner />}>
             {
                 tweets.map((tweet) => {
-                    return <TweetCard hideProfile={hideProfile} key={tweet.id} {...tweet} />
+                    return <TweetCard isEditable={isEditable} hideProfile={hideProfile} key={tweet.id} {...tweet} />
                 })}
         </InfiniteScroll>
     </ul>
@@ -52,7 +54,7 @@ export function InfiniteTweetsList({ tweets, isError, isLoading, fetchNewTweets,
 
 const datetimeFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: "short" });
 
-function TweetCard({ id, user, content, createdAt, likeCount, likedByMe, hideProfile = false }: Tweet) {
+function TweetCard({ id, user, content, createdAt, likeCount, likedByMe, hideProfile = false, isEditable = false }: Tweet) {
     const trpcUtils = api.useContext();
     const updateTweet = api.tweet.updateTweet.useMutation();
     const { register, handleSubmit } = useForm();
@@ -94,11 +96,13 @@ function TweetCard({ id, user, content, createdAt, likeCount, likedByMe, hidePro
         return <li className="flex gap-4 border px-4 py-4">
             <div className='flex flex-grow flex-col'>
                 <p className="whitespace-pre-wrap">{content} </p>
+                {isEditable == true && (
                 <form onSubmit={handleSubmit(handleSubmitTweet)}>
-                    <input {...register("id")} className="border" placeholder="id" value={id} type="hidden" />
-                    <input {...register("content")} className="border" placeholder="tweet" />
-                    <Button className="self-end">Change Tweet</Button>
-                </form>
+                <input {...register("id")} className="border" placeholder="id" value={id} type="hidden" />
+                <input {...register("content")} className="border" placeholder="tweet" />
+                <Button className="self-end">Change Tweet</Button>
+            </form>
+                )}
             </div>
         </li>
     }

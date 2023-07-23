@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Button } from "~/components/Button";
 import { useState, FormEvent } from "react";
 import { InfiniteTweetsList } from "~/components/InfiniteTweetsList";
+import { useSession } from "next-auth/react";
 const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> = ({ id }) => {
     const apiProfile = api.profile;
     const { data: profile } = apiProfile.getById.useQuery({ id })
@@ -19,8 +20,7 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
     const [inputValueTweet, setInputValueTweet] = useState("");
     const [inputValueId, setInputValueId] = useState("");
     const [inputValue, setInputValue] = useState("");
-
-
+    const session = useSession();
     if (profile == null || profile.name == null) return <ErrorPage statusCode={404} />
     const [name, setName] = useState(profile.name);
     function handleSubmit(e: FormEvent) {
@@ -31,6 +31,11 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
     function handleSubmitTweet(e: FormEvent) {
         e.preventDefault();
         updateTweet.mutate({ content: inputValueTweet, id: inputValueId });
+    }
+    let isUser = false;
+
+    if (session.data?.user.id == id) {
+        isUser=true;
     }
     return (
         <>
@@ -64,6 +69,7 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
                     hasMore={tweets.hasNextPage}
                     hideProfile={true}
                     fetchNewTweets={tweets.fetchNextPage}
+                    isEditable={isUser}
                 />
                 <Link href={`/ `}>
                     <button className="bg-red-300 rounded-full px-4 py-2 font-bold"> Back
