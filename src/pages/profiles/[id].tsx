@@ -15,11 +15,9 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
     const tweets = api.tweet.infiniteFeed.useInfiniteQuery({ currentId: id }, { getNextPageParam: (lastPage) => lastPage.nextCursor })
     const updateUser = apiProfile.updateUser.useMutation();
     const toggleFollow = apiProfile.toggleFollow.useMutation();
-    const { data: followStatus } = apiProfile.followStatus.useQuery({ id });
-    const updateTweet = api.tweet.updateTweet.useMutation();
-    const [inputValueTweet, setInputValueTweet] = useState("");
-    const [inputValueId, setInputValueId] = useState("");
+    const { data: followStatus } =apiProfile.followStatus.useQuery({ id }) ;
     const [inputValue, setInputValue] = useState("");
+    const [imageStringValue, setImageStringValue] = useState("");
     const session = useSession();
     if (profile == null || profile.name == null) return <ErrorPage statusCode={404} />
     const [name, setName] = useState(profile.name);
@@ -28,14 +26,17 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
         updateUser.mutate({ name: inputValue, id: id });
         setName(inputValue);
     }
-    function handleSubmitTweet(e: FormEvent) {
+    function handleSubmitImage(e: FormEvent) {
         e.preventDefault();
-        updateTweet.mutate({ content: inputValueTweet, id: inputValueId });
+        updateUser.mutate({ image: imageStringValue, id: id });
+        setImageStringValue("");
+    }
+    function handleToggleFollow() {
+        toggleFollow.mutate({ userId: id })
     }
     let isUser = false;
-
     if (session.data?.user.id == id) {
-        isUser=true;
+        isUser = true;
     }
     return (
         <>
@@ -47,12 +48,17 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
             <li className="flex gap-4 border px-4 py-4">
                 <ProfileImage src={profile.image} className="w-24 h-24" />
                 <h1 className="mb-2 px-4 text-lg font-bold text-center hover:animate-pulse">{name}</h1>
-                <Button onClick={() => toggleFollow.mutate({ userId: id })} className={` ${followStatus?.followObj?.classes} self-end`}>{followStatus?.followObj?.text}</Button>
+                {session.status !== 'unauthenticated' ? <Button key={crypto.randomUUID()} onClick={handleToggleFollow} className={` ${followStatus?.followObj?.classes} self-end`}>{followStatus?.followObj?.text}</Button> : null}
+
             </li>
             <li className="flex gap-4 border px-4 py-4">
                 <form onSubmit={handleSubmit}>
                     <input value={inputValue} className="border" onChange={(e) => setInputValue(e.target.value)} placeholder="username" />
                     <Button className="self-end">Change Username</Button>
+                </form>
+                <form onSubmit={handleSubmitImage}>
+                    <input value={imageStringValue} className="border" onChange={(e) => setImageStringValue(e.target.value)} placeholder="profile image link" />
+                    <Button className="self-end">Change Profile Picture</Button>
                 </form>
             </li>
             <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Followers: {profile.followersCount}</li>
