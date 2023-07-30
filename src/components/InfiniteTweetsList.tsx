@@ -44,10 +44,7 @@ export function InfiniteTweetsList({ tweets, isError, isLoading, fetchNewTweets,
             next={fetchNewTweets}
             hasMore={hasMore}
             loader={<LoadingSpinner />}>
-            {
-                tweets.map((tweet) => {
-                    return <TweetCard isEditable={isEditable} hideProfile={hideProfile} key={tweet.id} {...tweet} />
-                })}
+            {tweets.map((tweet) => { return <TweetCard isEditable={isEditable} hideProfile={hideProfile} key={tweet.id} {...tweet} /> })}
         </InfiniteScroll>
     </ul>
 }
@@ -97,11 +94,11 @@ function TweetCard({ id, user, content, createdAt, likeCount, likedByMe, hidePro
             <div className='flex flex-grow flex-col'>
                 <p className="whitespace-pre-wrap">{content} </p>
                 {isEditable == true && (
-                <form onSubmit={handleSubmit(handleSubmitTweet)}>
-                <input {...register("id")} className="border" placeholder="id" value={id} type="hidden" />
-                <input {...register("content")} className="border" placeholder="tweet" />
-                <Button className="self-end">Change Tweet</Button>
-            </form>
+                    <form onSubmit={handleSubmit(handleSubmitTweet)}>
+                        <input {...register("id")} className="border" placeholder="id" value={id} type="hidden" />
+                        <input {...register("content")} className="border" placeholder="tweet" />
+                        <Button className="self-end">Change Tweet</Button>
+                    </form>
                 )}
             </div>
         </li>

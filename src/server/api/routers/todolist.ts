@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { inferAsyncReturnType } from "@trpc/server";
+import { now } from "next-auth/client/_utils";
 import { z } from "zod";
 import {
     createTRPCContext,
@@ -47,9 +48,8 @@ export const todolistRouter = createTRPCRouter({
         .input(z.object({ task: z.string() }))
         .mutation(async ({ input: { task }, ctx }) => {
             const todo = await ctx.prisma.todoList.create({
-                data: { task, userId: ctx.session.user.id }
+                data: { task: task, userId: ctx.session.user.id, updatedAt: new Date() }
             })
-
             return todo;
         }),
     updateTask: protectedProcedure
