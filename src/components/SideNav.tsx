@@ -11,9 +11,12 @@ export function SideNav() {
             <li>
                 <IconHoverEffect><Link href="/"> <Image src="https://cdn.icon-icons.com/icons2/2620/PNG/512/among_us_player_red_icon_156942.png" alt="profile image" quality={100} width={100} height={100} /> </Link></IconHoverEffect>
             </li>
-            {user != null && <li>
+            {user != null && <><li>
                 <Link href={`/profiles/${user.id}`}>Profile</Link>
-            </li>}
+            </li>
+                <li>
+                    <Link href="/mytodos">My tasks</Link>
+                </li></>}
             {user == null ? (
                 <li>
                     <button onClick={() => void signIn()}>

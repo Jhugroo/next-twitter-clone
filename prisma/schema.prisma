@@ -76,8 +76,23 @@ model User {
     // non-next auth
     tweets    Tweet[]
     likes     Like[]
-    followers User[]  @relation(name: "followers")
-    follows   User[]  @relation(name: "followers")
+    followers User[]     @relation(name: "followers")
+    follows   User[]     @relation(name: "followers")
+    TodoList  TodoList[]
+}
+
+model TodoList {
+    id        String   @id @default(cuid())
+    task      String
+    complete  Boolean  @default(false)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    userId    String
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([createdAt, id])
+    @@index([userId])
 }
 
 model VerificationToken {
