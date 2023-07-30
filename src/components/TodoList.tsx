@@ -4,6 +4,7 @@ import { Button } from "./Button";
 import { GetStaticPaths } from "next";
 import { LoadingSpinner } from "./LoadingSpinner";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useState } from "react";
 type TodoList = {
     id: string
     task: string
@@ -70,9 +71,14 @@ function Todo({ id, task, complete, createdAt, updatedAt }: TodoList) {
     const dateFormatter = new Intl.DateTimeFormat('en-MU', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
     const updatedAtRendered = dateFormatter.format(updatedAt);
     const createdAtRendered = dateFormatter.format(createdAt);
-    const updateTask = api.todolist.updateTask.useMutation();
+    const [completeState, setCompleteState] = useState(complete);
+    const updateTask = api.todolist.updateTask.useMutation({
+        onSuccess: ({ task }) => {
+            setCompleteState(task.complete);
+        }
+    });
     function handleToggleTask() {
-        updateTask.mutate({ currentState: complete, id: id });
+        updateTask.mutate({ currentState: completeState, id: id });
     }
     return <>
         <li className="flex gap-4 border px-4 py-4">
@@ -81,8 +87,7 @@ function Todo({ id, task, complete, createdAt, updatedAt }: TodoList) {
                     <span className="text-gray-500">{createdAtRendered}</span>
                 </div>
                 {task}<br />
-                {complete ? <h1>done</h1> : <h1>not done</h1>}
-                <Button className="self-end" onClick={handleToggleTask} > Toggle Task</Button>
+                {completeState ? <h1>completed on  {updatedAtRendered} <Button className="self-end" onClick={handleToggleTask} > Undo</Button></h1> : <Button className="self-end" onClick={handleToggleTask} > Set to completed</Button>}
             </div>
         </li>
     </>
