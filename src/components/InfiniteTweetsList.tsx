@@ -83,13 +83,10 @@ function TweetCard({ id, user, content, createdAt, likeCount, likedByMe, hidePro
             trpcUtils.tweet.infiniteFeed.setInfiniteData({}, updateData);
         },
     });
-    function handleToggleLike() {
-        toggleLike.mutate({ id });
-    }
-    function handleSubmitTweet(data: any) {
-        updateTweet.mutate({ content: data.content, id: data.id });
-    }
     if (hideProfile == true) {
+        function handleSubmitTweet(data: any) {
+            updateTweet.mutate({ content: data.content, id: data.id });
+        }
         return <li className="flex gap-4 border px-4 py-4">
             <div className='flex flex-grow flex-col'>
                 <p className="whitespace-pre-wrap">{content} </p>
@@ -102,6 +99,9 @@ function TweetCard({ id, user, content, createdAt, likeCount, likedByMe, hidePro
                 )}
             </div>
         </li>
+    }
+    function handleToggleLike() {
+        toggleLike.mutate({ id });
     }
     return <li className="flex gap-4 border px-4 py-4">
         <Link href={`/profiles/${user.id}`} >
