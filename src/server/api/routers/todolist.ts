@@ -48,7 +48,7 @@ export const todolistRouter = createTRPCRouter({
         .input(z.object({ task: z.string() }))
         .mutation(async ({ input: { task }, ctx }) => {
             const todo = await ctx.prisma.todoList.create({
-                data: { task: task, userId: ctx.session.user.id, updatedAt: new Date() }
+                data: { task: task, userId: ctx.session.user.id }
             })
             return todo;
         }),
@@ -61,6 +61,7 @@ export const todolistRouter = createTRPCRouter({
                 },
                 data: {
                     complete: !currentState,
+                    updatedAt: (new Date())
                 },
             })
             return { task: updateTask }

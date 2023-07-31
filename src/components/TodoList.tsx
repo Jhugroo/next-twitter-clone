@@ -83,12 +83,13 @@ function InfiniteTasksList({ todos, isError, isLoading, fetchNewTasks, hasMore =
 
 function Todo({ id, task, complete, createdAt, updatedAt }: TodoList) {
     const dateFormatter = new Intl.DateTimeFormat('en-MU', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    const updatedAtRendered = dateFormatter.format(updatedAt);
     const createdAtRendered = dateFormatter.format(createdAt);
     const [completeState, setCompleteState] = useState(complete);
+    const [updatedAtRendered, setUpdatedAtRendered] = useState(dateFormatter.format(updatedAt));
     const updateTask = api.todolist.updateTask.useMutation({
         onSuccess: ({ task }) => {
             setCompleteState(task.complete);
+            setUpdatedAtRendered(dateFormatter.format(task.updatedAt))
         }
     });
     function handleToggleTask() {
@@ -98,10 +99,11 @@ function Todo({ id, task, complete, createdAt, updatedAt }: TodoList) {
         <li className="flex gap-4 border px-4 py-4">
             <div className='flex flex-grow flex-col'>
                 <div className="flex gap-1">
-                    <span className="text-gray-500">{createdAtRendered}</span>
+                    <span className="text-gray-500">    {completeState ? <>created on </> : null}{createdAtRendered}</span>
                 </div>
+                {completeState ? <span className="text-gray-500"> completed on {updatedAtRendered}</span> : null}
                 {task}<br />
-                {completeState ? <h1>completed on  {updatedAtRendered} <Button className="self-end" onClick={handleToggleTask} > Undo</Button></h1> : <Button className="self-end" onClick={handleToggleTask} > Set to completed</Button>}
+                {completeState ? <Button className="self-end" onClick={handleToggleTask} > Undo</Button> : <Button className="self-end" onClick={handleToggleTask} > Set to completed</Button>}
             </div>
         </li>
     </>
