@@ -63,9 +63,7 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
             <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Follows: {profile.followsCount}</li>
             <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Tweets: {profile.tweetsCount}</li>
             <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Liked posts: {profile.likesCount}</li>
-            <li className="flex gap-4">
-                Your tweets
-            </li>
+            <li className="flex gap-4"> Your tweets </li>
             <li className="flex gap-4">
                 <InfiniteTweetsList
                     tweets={tweets.data?.pages.flatMap((page) => page.tweets)} isError={tweets.isError}

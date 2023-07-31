@@ -25,7 +25,6 @@ export function SideNav() {
                 </li>
             ) :
                 (<li>
-
                     <button onClick={() => void signOut()}>
                         Logout
                     </button>

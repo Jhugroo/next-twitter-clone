@@ -98,7 +98,7 @@ function Todo({ id, task, complete, createdAt, updatedAt }: TodoList) {
         <li className="flex gap-4 border px-4 py-4">
             <div className='flex flex-grow flex-col'>
                 <div className="flex gap-1">
-                    <span className="text-gray-500">    {completeState ? <>created on </> : null}{createdAtRendered}</span>
+                    <span className="text-gray-500"> {completeState ? <>created on </> : null}{createdAtRendered}</span>
                 </div>
                 {completeState ? <span className="text-gray-500"> completed on {updatedAtRendered}</span> : null}
                 {task}<br />

@@ -15,6 +15,7 @@ export function NewTweetForm() {
     if (session.status !== "authenticated") return null;
     return <Form />;
 }
+
 function Form() {
     const session = useSession();
     const [inputValue, setInputValue] = useState("");
@@ -26,10 +27,7 @@ function Form() {
 
     const trpcUtils = api.useContext();
 
-    useLayoutEffect(() => {
-        updateTextAreaSize(textAreaRef?.current);
-
-    }, [inputValue]);
+    useLayoutEffect(() => { updateTextAreaSize(textAreaRef?.current); }, [inputValue]);
 
     if (session.status !== "authenticated") return null;
 
