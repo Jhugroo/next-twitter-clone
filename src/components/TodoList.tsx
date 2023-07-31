@@ -88,13 +88,11 @@ function Todo({ id, task, complete, createdAt, updatedAt }: TodoList) {
     const [isDeleted, setIsDeleted] = useState(false);
     const [updatedAtRendered, setUpdatedAtRendered] = useState(dateFormatter.format(updatedAt));
     const updateTask = api.todolist.updateTask.useMutation({
-        onSuccess: ({ task }) => { setCompleteState(task.complete); setUpdatedAtRendered(dateFormatter.format(task.updatedAt)); }
+        onSuccess: ({ task }) => { setUpdatedAtRendered(dateFormatter.format(task.updatedAt)); }
     });
-    const deleteTask = api.todolist.deleteTask.useMutation({
-        onSuccess: () => { setIsDeleted(true) }
-    });
-    function handleToggleTask() { updateTask.mutate({ currentState: completeState, id: id }); }
-    function handleDelete() { deleteTask.mutate({ id: id }); }
+    const deleteTask = api.todolist.deleteTask.useMutation();
+    function handleToggleTask() { setUpdatedAtRendered(dateFormatter.format(new Date())); setCompleteState(!completeState); updateTask.mutate({ currentState: completeState, id: id }); }
+    function handleDelete() { setIsDeleted(true); deleteTask.mutate({ id: id }); }
     if (isDeleted) { return <></> }
     return <>
         <li className="flex gap-4 border px-4 py-4">
