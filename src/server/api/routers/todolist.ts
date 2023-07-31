@@ -66,4 +66,14 @@ export const todolistRouter = createTRPCRouter({
             })
             return { task: updateTask }
         }),
+    deleteTask: protectedProcedure
+        .input(z.object({ id: z.string() }))
+        .mutation(async ({ input: { id }, ctx }) => {
+            const updateTask = await ctx.prisma.todoList.delete({
+                where: {
+                    id: id,
+                }
+            })
+            return { task: updateTask }
+        }),
 })

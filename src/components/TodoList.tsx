@@ -85,16 +85,17 @@ function Todo({ id, task, complete, createdAt, updatedAt }: TodoList) {
     const dateFormatter = new Intl.DateTimeFormat('en-MU', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
     const createdAtRendered = dateFormatter.format(createdAt);
     const [completeState, setCompleteState] = useState(complete);
+    const [isDeleted, setIsDeleted] = useState(false);
     const [updatedAtRendered, setUpdatedAtRendered] = useState(dateFormatter.format(updatedAt));
     const updateTask = api.todolist.updateTask.useMutation({
-        onSuccess: ({ task }) => {
-            setCompleteState(task.complete);
-            setUpdatedAtRendered(dateFormatter.format(task.updatedAt))
-        }
+        onSuccess: ({ task }) => { setCompleteState(task.complete); setUpdatedAtRendered(dateFormatter.format(task.updatedAt)); }
     });
-    function handleToggleTask() {
-        updateTask.mutate({ currentState: completeState, id: id });
-    }
+    const deleteTask = api.todolist.deleteTask.useMutation({
+        onSuccess: () => { setIsDeleted(true) }
+    });
+    function handleToggleTask() { updateTask.mutate({ currentState: completeState, id: id }); }
+    function handleDelete() { deleteTask.mutate({ id: id }); }
+    if (isDeleted) { return <></> }
     return <>
         <li className="flex gap-4 border px-4 py-4">
             <div className='flex flex-grow flex-col'>
@@ -103,7 +104,7 @@ function Todo({ id, task, complete, createdAt, updatedAt }: TodoList) {
                 </div>
                 {completeState ? <span className="text-gray-500"> completed on {updatedAtRendered}</span> : null}
                 {task}<br />
-                {completeState ? <Button className="self-end" onClick={handleToggleTask} > Undo</Button> : <Button className="self-end" onClick={handleToggleTask} > Set to completed</Button>}
+                {completeState ? <div className="self-end"><Button className="bg-red-500 hover:bg-red-300" onClick={handleDelete} > Delete</Button><Button onClick={handleToggleTask} > Undo</Button></div> : <Button className="self-end" onClick={handleToggleTask} > Set to completed</Button>}
             </div>
         </li>
     </>
