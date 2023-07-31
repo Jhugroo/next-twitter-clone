@@ -47,7 +47,7 @@ export function Todolist() {
     });
     function handleSubmitTodo(e: FormEvent) {
         e.preventDefault();
-        inputValue ? createTodo.mutate({ task: inputValue }) : null;
+        inputValue ? createTodo.mutate({ task: inputValue }) : alert('Please enter a task');
     }
     return <>
         <form onSubmit={handleSubmitTodo} className="flex flex-col gap-2 border-2 px-4 py-2">
