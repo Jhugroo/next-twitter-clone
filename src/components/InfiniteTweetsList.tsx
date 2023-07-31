@@ -90,13 +90,13 @@ function TweetCard({ id, user, content, createdAt, likeCount, likedByMe, hidePro
         return <li className="flex gap-4 border px-4 py-4">
             <div className='flex flex-grow flex-col'>
                 <p className="whitespace-pre-wrap">{content} </p>
-                {isEditable == true && (
+                {isEditable == true ? (
                     <form onSubmit={handleSubmit(handleSubmitTweet)}>
                         <input {...register("id")} className="border" placeholder="id" value={id} type="hidden" />
                         <input {...register("content")} className="border" placeholder="tweet" />
                         <Button className="self-end">Change Tweet</Button>
                     </form>
-                )}
+                ) : <HeartButton onClick={handleToggleLike} isLoading={toggleLike.isLoading} likedByMe={likedByMe} likeCount={likeCount} />}
             </div>
         </li>
     }

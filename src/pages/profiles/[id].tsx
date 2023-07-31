@@ -15,7 +15,7 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
     const tweets = api.tweet.infiniteFeed.useInfiniteQuery({ currentId: id }, { getNextPageParam: (lastPage) => lastPage.nextCursor })
     const updateUser = apiProfile.updateUser.useMutation();
     const toggleFollow = apiProfile.toggleFollow.useMutation();
-    const { data: followStatus } =apiProfile.followStatus.useQuery({ id }) ;
+    const { data: followStatus } = apiProfile.followStatus.useQuery({ id });
     const [inputValue, setInputValue] = useState("");
     const [imageStringValue, setImageStringValue] = useState("");
     const session = useSession();
@@ -48,10 +48,9 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
             <li className="flex gap-4 border px-4 py-4">
                 <ProfileImage src={profile.image} className="w-24 h-24" />
                 <h1 className="mb-2 px-4 text-lg font-bold text-center hover:animate-pulse">{name}</h1>
-                {session.status !== 'unauthenticated' ? <Button key={crypto.randomUUID()} onClick={handleToggleFollow} className={` ${followStatus?.followObj?.classes} self-end`}>{followStatus?.followObj?.text}</Button> : null}
-
+                {(!isUser && session.status !== 'unauthenticated') ? <Button onClick={handleToggleFollow} className={` ${followStatus?.followObj?.classes} self-end`}>{followStatus?.followObj?.text}</Button> : null}
             </li>
-            <li className="flex gap-4 border px-4 py-4">
+            {isUser && (<li className="flex gap-4 border px-4 py-4">
                 <form onSubmit={handleSubmit}>
                     <input value={inputValue} className="border" onChange={(e) => setInputValue(e.target.value)} placeholder="username" />
                     <Button className="self-end">Change Username</Button>
@@ -60,7 +59,7 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
                     <input value={imageStringValue} className="border" onChange={(e) => setImageStringValue(e.target.value)} placeholder="profile image link" />
                     <Button className="self-end">Change Profile Picture</Button>
                 </form>
-            </li>
+            </li>)}
             <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Followers: {profile.followersCount}</li>
             <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Follows: {profile.followsCount}</li>
             <li className="flex gap-4 border px-4 py-4 hover:animate-pulse">Tweets: {profile.tweetsCount}</li>
