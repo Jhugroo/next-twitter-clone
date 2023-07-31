@@ -46,8 +46,7 @@ const ProfilePage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> 
                 </title>
             </Head>
             <li className="flex gap-4 border px-4 py-4">
-                <ProfileImage src={profile.image} className="w-24 h-24" />
-                <h1 className="mb-2 px-4 text-lg font-bold text-center hover:animate-pulse">{name}</h1>
+                <ProfileImage src={profile.image} className="w-24 h-24" /><h1 className="mb-2 px-4 text-lg font-bold text-center hover:animate-pulse">{name}</h1>
                 {(!isUser && session.status !== 'unauthenticated') ? <Button onClick={handleToggleFollow} className={` ${followStatus?.followObj?.classes} self-end`}>{followStatus?.followObj?.text}</Button> : null}
             </li>
             {isUser && (<li className="flex gap-4 border px-4 py-4">
