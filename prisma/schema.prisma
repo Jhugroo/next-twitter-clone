@@ -96,9 +96,10 @@ model TodoList {
 }
 
 model TaskPriority {
-    priority String @id
+    priorityId String @id
+    priority   String
 
-    @@unique([priority])
+    @@unique([priorityId, priority])
 }
 
 model VerificationToken {
