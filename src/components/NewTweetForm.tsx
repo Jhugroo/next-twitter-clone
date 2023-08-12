@@ -1,9 +1,8 @@
 import { Button } from "~/components/Button";
 import { ProfileImage } from "~/components/ProfileImage";
 import { useSession } from "next-auth/react";
-import { FormEvent, useCallback, useLayoutEffect, useRef, useState } from "react";
+import { FormEvent, useCallback, useLayoutEffect, useRef, useState, Fragment } from "react";
 import { api } from "~/utils/api";
-
 function updateTextAreaSize(textArea?: HTMLTextAreaElement | null) {
     if (textArea == null) return
     textArea.style.height = "0"
@@ -12,11 +11,13 @@ function updateTextAreaSize(textArea?: HTMLTextAreaElement | null) {
 
 export function NewTweetForm() {
     const session = useSession();
+
     if (session.status !== "authenticated") return null;
     return <Form />;
 }
 
 function Form() {
+    let [isOpen, setIsOpen] = useState(false)
     const session = useSession();
     const [inputValue, setInputValue] = useState("");
     const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
@@ -63,13 +64,21 @@ function Form() {
     });
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
-        createTweet.mutate({ content: inputValue });
+        if (inputValue.length <= 0) {
+            setIsOpen(true)
+        } else {
+            createTweet.mutate({ content: inputValue });
+        }
+
     }
-    return <form onSubmit={handleSubmit} className="flex flex-col gap-2 border-2 px-4 py-2">
-        <div className="flex gap-4">
-            <ProfileImage src={session.data.user.image} />
-            <textarea ref={inputRef} style={{ height: 0 }} value={inputValue} onChange={(e) => setInputValue(e.target.value)} className="flex-grow resize-none overflow-hidden p-4 text-lg outline-none" placeholder="whats happening" />
-        </div>
-        <Button className="self-end">Tweet</Button>
-    </form>;
+    return <>      
+       
+        <form onSubmit={handleSubmit} className="flex flex-col gap-2 border-2 px-4 py-2">
+            <div className="flex gap-4">
+                <ProfileImage src={session.data.user.image} />
+                <textarea ref={inputRef} style={{ height: 0 }} value={inputValue} onChange={(e) => setInputValue(e.target.value)} className="flex-grow resize-none overflow-hidden p-4 text-lg outline-none" placeholder="whats happening" />
+            </div>
+            <Button className="self-end">Tweet</Button>
+        </form>
+    </>;
 }

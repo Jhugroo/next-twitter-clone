@@ -95,6 +95,12 @@ model TodoList {
     @@index([userId])
 }
 
+model TaskPriority {
+    priority String @id
+
+    @@unique([priority])
+}
+
 model VerificationToken {
     identifier String
     token      String   @unique
